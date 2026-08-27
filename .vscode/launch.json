@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ComfortIndexApplication<comfort-index>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.fidenz.comfort_index.ComfortIndexApplication",
+            "projectName": "comfort-index",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
