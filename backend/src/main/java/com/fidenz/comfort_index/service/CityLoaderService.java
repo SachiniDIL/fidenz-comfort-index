@@ -1,5 +1,6 @@
 package com.fidenz.comfort_index.service;
 
+import lombok.Getter;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import com.fidenz.comfort_index.dto.City;
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+@Getter
 @Service
 public class CityLoaderService {
     
@@ -20,10 +22,6 @@ public class CityLoaderService {
         this.cities = loadCitiesFromFile(objectMapper);
     }
 
-    public List<City> getCities() {
-        return cities;
-    }
-    
     private List<City> loadCitiesFromFile(ObjectMapper objectMapper) {
         try(InputStream inputStream = new ClassPathResource("cities.json").getInputStream()) {
             CityListWrapper cityListWrapper = objectMapper.readValue(inputStream, CityListWrapper.class);
