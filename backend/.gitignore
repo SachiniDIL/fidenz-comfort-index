@@ -31,3 +31,20 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### OS ###
+.DS_Store
+Thumbs.db
+desktop.ini
+
+### Env / local config ###
+.env
+.env.local
+.env.*.local
+application-local.properties
+application-local.yml
+application-local.yaml
+
+### Logs ###
+logs/
+*.log
