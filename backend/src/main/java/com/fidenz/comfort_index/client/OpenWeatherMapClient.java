@@ -1,6 +1,8 @@
 package com.fidenz.comfort_index.client;
 
+import com.fidenz.comfort_index.config.CacheConfig;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
@@ -25,6 +27,7 @@ public class OpenWeatherMapClient implements WeatherClient {
     }
 
     @Override
+    @Cacheable(CacheConfig.WEATHER_CACHE)
     public WeatherResponse fetchWeather(String cityCode) {
         String url = UriComponentsBuilder.fromUriString(BASE_URL)
                 .queryParam("id", cityCode)
