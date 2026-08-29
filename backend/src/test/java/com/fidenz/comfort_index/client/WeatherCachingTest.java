@@ -16,7 +16,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = {CacheConfig.class, OpenWeatherMapClient.class})
-@TestPropertySource(properties = "openweathermap.api.key=test28hx84b87bx87h8")
+//@TestPropertySource(properties = "openweathermap.api.key=test28hx84b87bx87h8")
 class WeatherCachingTest {
 
     @MockitoBean
