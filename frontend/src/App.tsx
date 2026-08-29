@@ -2,8 +2,15 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { CityList } from './components/CityList';
 import { LoginButton } from './components/LoginButton';
 import { LogoutButton } from './components/LogoutButton';
+import { ThemeToggle } from './components/ThemeToggle';
 import { useCities } from './hooks/useCities';
+import { useTheme, type Theme } from './hooks/useTheme';
 import { GRADIENT_CSS } from './lib/temperature';
+
+interface ThemeControls {
+  theme: Theme;
+  onToggleTheme: () => void;
+}
 
 function Nameplate({ subline }: { subline: string }) {
   return (
@@ -19,7 +26,7 @@ function Nameplate({ subline }: { subline: string }) {
   );
 }
 
-function Dashboard() {
+function Dashboard({ theme, onToggleTheme }: ThemeControls) {
   const { cities, loading, error, refresh } = useCities();
   const isInitialLoad = loading && cities.length === 0;
   const subline =
@@ -33,6 +40,7 @@ function Dashboard() {
         <header className="flex flex-col gap-5 border-b border-hairline pb-6 sm:flex-row sm:items-end sm:justify-between">
           <Nameplate subline={subline} />
           <div className="flex shrink-0 items-center gap-2">
+            <ThemeToggle theme={theme} onToggle={onToggleTheme} />
             <button
               type="button"
               onClick={refresh}
@@ -69,12 +77,15 @@ function Dashboard() {
   );
 }
 
-function LoginScreen() {
+function LoginScreen({ theme, onToggleTheme }: ThemeControls) {
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-10">
       <div className="w-full max-w-sm rounded-lg border border-hairline bg-surface p-8">
         <div className="flex flex-col gap-6">
-          <Nameplate subline="Sign in to view the index" />
+          <div className="flex items-start justify-between gap-4">
+            <Nameplate subline="Sign in to view the index" />
+            <ThemeToggle theme={theme} onToggle={onToggleTheme} />
+          </div>
 
           <div className="flex flex-col gap-1.5">
             <div
@@ -105,6 +116,7 @@ function LoginScreen() {
 }
 
 function App() {
+  const { theme, toggleTheme } = useTheme();
   const { isAuthenticated, isLoading, error } = useAuth0();
 
   if (isLoading) {
@@ -131,7 +143,11 @@ function App() {
     );
   }
 
-  return isAuthenticated ? <Dashboard /> : <LoginScreen />;
+  return isAuthenticated ? (
+    <Dashboard theme={theme} onToggleTheme={toggleTheme} />
+  ) : (
+    <LoginScreen theme={theme} onToggleTheme={toggleTheme} />
+  );
 }
 
 export default App;

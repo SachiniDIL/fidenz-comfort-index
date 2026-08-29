@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: "Space Grotesk", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-display: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
@@ -18,7 +20,28 @@
   --color-temp-hot: #bc4e38;
 }
 
+/* Dark mode — "instrument panel at night": a cool graphite console, not pure
+   black. Same token names redefined, so every bg-panel / text-ink / border-hairline
+   utility picks these up with no component changes. The temperature gradient
+   (temp-cold..temp-hot) is deliberately left identical in both themes so a colour
+   on a card always maps to the same temperature. */
+.dark {
+  --color-panel: #10171c;
+  --color-surface: #1b252b;
+  --color-ink: #e7edf0;
+  --color-slate: #8c9ba4;
+  --color-hairline: #33424b;
+}
+
 @layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  .dark {
+    color-scheme: dark;
+  }
+
   body {
     background-color: var(--color-panel);
     color: var(--color-ink);
