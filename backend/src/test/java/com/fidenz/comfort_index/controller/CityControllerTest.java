@@ -7,12 +7,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -27,6 +29,9 @@ class CityControllerTest {
     @MockitoBean
     private CityService cityService;
 
+    @MockitoBean
+    private JwtDecoder jwtDecoder;
+
     @Test
     void getCitiesReturnsRankedListAsJsonArray() throws Exception {
         CityWeatherResult first = new CityWeatherResult("Oslo", "clear sky", -3.9, 85.0, 1);
@@ -34,7 +39,7 @@ class CityControllerTest {
 
         when(cityService.getRankedCities()).thenReturn(List.of(first, second));
 
-        mockMvc.perform(get("/api/cities"))
+        mockMvc.perform(get("/api/cities").with(jwt()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].cityName").value("Oslo"))
                 .andExpect(jsonPath("$[0].rank").value(1))
