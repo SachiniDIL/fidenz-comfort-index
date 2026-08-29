@@ -7,7 +7,7 @@ export function LoginButton() {
     <button
       type="button"
       onClick={() => loginWithRedirect()}
-      className="inline-flex items-center justify-center rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-700"
+      className="inline-flex w-full items-center justify-center rounded bg-ink px-5 py-3 font-mono text-xs font-medium uppercase tracking-wider text-surface transition-colors hover:bg-slate"
     >
       Log in
     </button>
