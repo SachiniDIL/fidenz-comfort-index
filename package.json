@@ -10,7 +10,7 @@
   },
   "lint-staged": {
     "frontend/**/*.{ts,tsx}": [
-      "bash -c 'cd frontend && npx tsc --noEmit'"
+      "bash -c 'cd frontend && npx tsc --noEmit -p tsconfig.app.json'"
     ]
   }
 }

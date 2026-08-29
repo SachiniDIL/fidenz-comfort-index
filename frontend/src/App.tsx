@@ -6,8 +6,6 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
-
-  const testError: string = 12345;
   
   return (
     <>
