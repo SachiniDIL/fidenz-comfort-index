@@ -40,10 +40,12 @@ class CityServiceTest {
         List<CityWeatherResult> results = cityService.getRankedCities();
 
         assertThat(results).hasSize(2);
+        assertThat(results.get(0).cityCode()).isEqualTo("3143244");
         assertThat(results.get(0).cityName()).isEqualTo("Oslo");
         assertThat(results.get(0).rank()).isEqualTo(1);
         assertThat(results.get(0).comfortScore()).isEqualTo(85.0);
 
+        assertThat(results.get(1).cityCode()).isEqualTo("1248991");
         assertThat(results.get(1).cityName()).isEqualTo("Colombo");
         assertThat(results.get(1).rank()).isEqualTo(2);
         assertThat(results.get(1).comfortScore()).isEqualTo(60.0);
@@ -60,6 +62,7 @@ class CityServiceTest {
 
         CityWeatherResult result = cityService.getRankedCities().get(0);
 
+        assertThat(result.cityCode()).isEqualTo("2988507");
         assertThat(result.cityName()).isEqualTo("Paris");
         assertThat(result.description()).isEqualTo("clear sky");
         assertThat(result.temperature()).isEqualTo(22.4);

@@ -8,6 +8,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
+import com.fidenz.comfort_index.dto.ForecastResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.RestTemplate;
 
@@ -37,4 +38,32 @@ class OpenWeatherMapClientTest {
         assertThat(response.main().temp()).isEqualTo(28.32);
     }
 
+    @Test
+    void fetchForecastReturnsParsedResponse() {
+        RestTemplate mockRestTemplate = mock(RestTemplate.class);
+
+        ForecastResponse fakeResponse = new ForecastResponse(
+                List.of(
+                        new ForecastResponse.ForecastEntry(
+                                "2026-08-30 12:00:00",
+                                new ForecastResponse.ForecastEntry.MainDetail(24.5)
+                        ),
+                        new ForecastResponse.ForecastEntry(
+                                "2026-08-30 15:00:00",
+                                new ForecastResponse.ForecastEntry.MainDetail(26.1)
+                        )
+                )
+        );
+
+        when(mockRestTemplate.getForObject(anyString(), eq(ForecastResponse.class)))
+                .thenReturn(fakeResponse);
+
+        OpenWeatherMapClient client = new OpenWeatherMapClient( "fake-api-key", mockRestTemplate);
+
+        ForecastResponse result = client.fetchForecast("2172797");
+
+        assertThat(result.list()).hasSize(2);
+        assertThat(result.list().get(0).dateTime()).isEqualTo("2026-08-30 12:00:00");
+        assertThat(result.list().get(0).main().temp()).isEqualTo(24.5);
+    }
 }

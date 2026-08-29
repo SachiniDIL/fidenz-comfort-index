@@ -38,13 +38,16 @@ public class CityService {
         WeatherResponse weatherResponse = weatherClient.fetchWeather(city.cityCode());
         double score = comfortIndexCalculator.calculateComfortIndex(weatherResponse);
         String description = weatherResponse.weather().getFirst().description();
-        return new ScoredCity(city.cityName(), description, weatherResponse.main().temp(), score);
+        return new ScoredCity(city.cityCode(), city.cityName(), description,
+                weatherResponse.main().temp(),
+                score);
     }
 
     private CityWeatherResult toResult(ScoredCity scoredCity, int rank) {
         double roundedScore = Math.round(scoredCity.comfortScore() * 10) / 10.0;
 
         return new CityWeatherResult(
+                scoredCity.cityCode(),
                 scoredCity.cityName(),
                 scoredCity.description(),
                 scoredCity.temperature(),
@@ -54,6 +57,7 @@ public class CityService {
     }
 
     private record ScoredCity(
+            String cityCode,
             String cityName,
             String description,
             double temperature,

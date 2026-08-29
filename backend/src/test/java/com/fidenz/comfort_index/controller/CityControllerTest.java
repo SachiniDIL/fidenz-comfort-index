@@ -1,5 +1,6 @@
 package com.fidenz.comfort_index.controller;
 
+import com.fidenz.comfort_index.client.WeatherClient;
 import com.fidenz.comfort_index.config.SecurityConfig;
 import com.fidenz.comfort_index.dto.CityWeatherResult;
 import com.fidenz.comfort_index.service.CityService;
@@ -30,19 +31,24 @@ class CityControllerTest {
     private CityService cityService;
 
     @MockitoBean
+    private WeatherClient weatherClient;
+
+    @MockitoBean
     private JwtDecoder jwtDecoder;
 
     @Test
     void getCitiesReturnsRankedListAsJsonArray() throws Exception {
-        CityWeatherResult first = new CityWeatherResult("Oslo", "clear sky", -3.9, 85.0, 1);
-        CityWeatherResult second = new CityWeatherResult("Colombo", "overcast clouds", 33.0, 60.0, 2);
+        CityWeatherResult first = new CityWeatherResult("3143244", "Oslo", "clear sky", -3.9, 85.0, 1);
+        CityWeatherResult second = new CityWeatherResult("1248991", "Colombo", "overcast clouds", 33.0, 60.0, 2);
 
         when(cityService.getRankedCities()).thenReturn(List.of(first, second));
 
         mockMvc.perform(get("/api/cities").with(jwt()))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].cityCode").value("3143244"))
                 .andExpect(jsonPath("$[0].cityName").value("Oslo"))
                 .andExpect(jsonPath("$[0].rank").value(1))
+                .andExpect(jsonPath("$[1].cityCode").value("1248991"))
                 .andExpect(jsonPath("$[1].cityName").value("Colombo"))
                 .andExpect(jsonPath("$[1].rank").value(2));
     }
