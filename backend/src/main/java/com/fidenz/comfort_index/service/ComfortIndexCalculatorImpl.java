@@ -1,7 +1,9 @@
 package com.fidenz.comfort_index.service;
 
 import com.fidenz.comfort_index.dto.WeatherResponse;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ComfortIndexCalculatorImpl implements ComfortIndexCalculator {
 
     private static final double TEMP_WEIGHT = 0.45;
