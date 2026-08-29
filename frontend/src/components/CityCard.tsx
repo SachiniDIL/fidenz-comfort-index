@@ -1,14 +1,31 @@
+import { lazy, Suspense, useState } from 'react';
 import type { City } from '../types/city';
 import { temperatureColor } from '../lib/temperature';
+import { useForecast } from '../hooks/useForecast';
+
+// recharts is heavy and only needed once a card is expanded — keep it out of the
+// initial bundle.
+const ForecastChart = lazy(() =>
+  import('./ForecastChart').then((module) => ({ default: module.ForecastChart })),
+);
 
 interface CityCardProps {
   city: City;
 }
 
 export function CityCard({ city }: CityCardProps) {
-  const { cityName, description, temperature, comfortScore, rank } = city;
+  const { cityCode, cityName, description, temperature, comfortScore, rank } = city;
   const isTopRank = rank === 1;
   const swatch = temperatureColor(temperature);
+
+  const [expanded, setExpanded] = useState(false);
+  const [everExpanded, setEverExpanded] = useState(false);
+  const forecast = useForecast(everExpanded && cityCode ? cityCode : null);
+
+  const toggleForecast = () => {
+    setEverExpanded(true);
+    setExpanded((open) => !open);
+  };
 
   return (
     <article
@@ -61,6 +78,55 @@ export function CityCard({ city }: CityCardProps) {
           {comfortScore.toFixed(1)}
         </span>
       </div>
+
+      {cityCode && (
+        <div className="-mx-5 -mb-5 mt-1 border-t border-hairline">
+          <button
+            type="button"
+            onClick={toggleForecast}
+            aria-expanded={expanded}
+            className="flex w-full items-center justify-between px-5 py-2.5 font-mono text-[11px] font-medium uppercase tracking-wider text-slate transition-colors hover:text-ink"
+          >
+            <span>{expanded ? 'Hide forecast' : '5-Day forecast'}</span>
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 12 12"
+              className={`h-2.5 w-2.5 transition-transform duration-150 ${
+                expanded ? 'rotate-180' : ''
+              }`}
+            >
+              <path
+                d="M2 4.5 6 8.5l4-4"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+          </button>
+
+          {expanded && (
+            <div className="border-t border-hairline">
+              <Suspense
+                fallback={
+                  <p className="px-4 py-4 font-mono text-sm text-slate">
+                    Reading forecast…
+                  </p>
+                }
+              >
+                <ForecastChart
+                  cityName={cityName}
+                  currentTemperature={temperature}
+                  data={forecast.data}
+                  loading={forecast.loading}
+                  error={forecast.error}
+                />
+              </Suspense>
+            </div>
+          )}
+        </div>
+      )}
     </article>
   );
 }

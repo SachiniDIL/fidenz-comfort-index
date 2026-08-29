@@ -54,6 +54,22 @@
   }
 }
 
+/* Recharts forecast chart — every stroke / fill comes from the design tokens so
+   the chart tracks light and dark mode like the rest of the instrument panel.
+   (recharts writes SVG presentation attributes, which can't take var(), so the
+   wiring lives here rather than on the component's props.) */
+.forecast-chart .recharts-cartesian-grid line {
+  stroke: var(--color-hairline);
+}
+.forecast-chart .recharts-cartesian-axis-tick-value {
+  fill: var(--color-slate);
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+.forecast-chart .recharts-tooltip-cursor {
+  stroke: var(--color-hairline);
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
